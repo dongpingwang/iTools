@@ -2,6 +2,7 @@ package com.wdp.itools.util
 
 import android.os.IInterface
 import android.os.RemoteCallbackList
+import android.widget.SeekBar
 
 fun <T> T?.isNotNull(block: (T) -> Unit) {
     if (this != null) {
