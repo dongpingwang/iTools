@@ -29,3 +29,7 @@ fun <E : IInterface> RemoteCallbackList<E>.broadcast(block: (E) -> Unit) {
     }
     finishBroadcast()
 }
+
+fun <E> MutableList<E>.addIfNotExist(element: E): Boolean {
+    return !contains(element) && add(element)
+}
