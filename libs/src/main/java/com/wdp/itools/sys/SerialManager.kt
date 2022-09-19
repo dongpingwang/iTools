@@ -20,6 +20,7 @@ class SerialManager {
     private var inputBuffer = ByteBuffer.allocate(dataBufferSize)
     private var outBuffer = ByteBuffer.allocate(dataBufferSize)
     private var serialPort: SerialPort? = null
+    private val readerThread by lazy { ReaderThread() }
     private var buffer = ByteArray(dataBufferSize)
     private var onDataReceiveListener: ((ByteArray) -> Unit)? = null
 
@@ -28,7 +29,7 @@ class SerialManager {
             serialPort = serialManager.openSerialPort(name, speed)
             val result = serialPort == null
             if (result) {
-                ReaderThread().start()
+                readerThread.start()
             }
             return result
         } catch (e: Exception) {
@@ -46,6 +47,7 @@ class SerialManager {
             }
         }
         serialPort = null
+        readerThread.interrupt()
     }
 
     fun writeData(data: ByteArray) {
@@ -66,13 +68,10 @@ class SerialManager {
         this.onDataReceiveListener = onDataReceiveListener
     }
 
-    private inner class ReaderThread : Runnable {
-
-        fun start() {
-            Thread(this).start()
-        }
+    private inner class ReaderThread : Thread() {
 
         override fun run() {
+            super.run()
             var ret = 0
             while (ret >= 0) {
                 serialPort?.apply {
