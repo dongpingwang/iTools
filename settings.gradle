@@ -15,4 +15,3 @@ dependencyResolutionManagement {
 rootProject.name = "iTools"
 include ':demo'
 include ':libs'
-include ':ext_sys_provider'
